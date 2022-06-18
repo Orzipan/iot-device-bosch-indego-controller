@@ -16,6 +16,9 @@
  */
 package de.zazaz.iot.bosch.indego;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
@@ -277,6 +280,8 @@ public class IndegoController {
                 return null;
             }
             else {
+            	if (returnType==String.class)
+            		return (T) responseContents;
                 T result = mapper.readValue(responseContents, returnType);
                 return result;
             }
@@ -404,5 +409,17 @@ public class IndegoController {
     {
         doPutRequest("alms/" + session.getAlmSn() + "/predictive/calendar", calendar, null);
     }
+
+	public void downloadMap(File file) {
+		try {
+			String svgFile=doGetRequest("alms/" + session.getAlmSn() + "/map", String.class);
+			try(FileOutputStream fos=new FileOutputStream(file);){
+				fos.write(svgFile.getBytes());
+				System.out.println("Wrote SVG map file to:"+file.getAbsolutePath());
+			}
+		} catch (IOException|IndegoException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
