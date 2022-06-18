@@ -98,6 +98,10 @@ public class DeviceStateInformation {
 
     private int state;
     
+    private int xPos = 0;
+
+    private int yPos = 0;
+
     private int error;
 
     private int mowed;
@@ -208,4 +212,23 @@ public class DeviceStateInformation {
         mapUpdateAvailable = map_update_available_;
     }
 
+    @JsonGetter("xPos")
+    public int getxPos() {
+        return xPos;
+    }
+
+    @JsonSetter("xPos")
+    public void setxPos(int xPos) {
+        this.xPos = xPos;
+    }
+
+    @JsonGetter("yPos")
+    public int getyPos() {
+        return yPos;
+    }
+
+    @JsonSetter("yPos")
+    public void setyPos(int yPos) {
+        this.yPos = yPos;
+    }
 }
