@@ -33,11 +33,8 @@ public class App {
 
     private static final String BASE_URL_PUSHWOOSH = "https://cp.pushwoosh.com/json/1.3/";
 
-    public static void main (String[] args) throws ClientProtocolException, IOException,
-            InterruptedException
-    {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-
+    public static void main(String[] args) throws ClientProtocolException, IOException,
+            InterruptedException {
         HttpPost httpPost = new HttpPost(BASE_URL_PUSHWOOSH + "registerDevice");
         String jsonPost = ""//
                 + "{" //
@@ -50,31 +47,32 @@ public class App {
                 + "  }" //
                 + "}";
         httpPost.setEntity(new StringEntity(jsonPost, ContentType.APPLICATION_JSON));
-        CloseableHttpResponse response = httpClient.execute(httpPost);
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+                CloseableHttpResponse response = httpClient.execute(httpPost)) {
 
-        System.out.println(response.getStatusLine());
-        Header[] headers = response.getAllHeaders();
-        for (int i = 0; i < headers.length; i++) {
-            System.out.println(headers[i].getName() + ": " + headers[i].getValue());
+            System.out.println(response.getStatusLine());
+            Header[] headers = response.getAllHeaders();
+            for (int i = 0; i < headers.length; i++) {
+                System.out.println(headers[i].getName() + ": " + headers[i].getValue());
+            }
+
+            HttpEntity entity = response.getEntity();
+            String contents = EntityUtils.toString(entity);
+            System.out.println(contents);
+
+            Thread.sleep(5000);
+
+            HttpPost httpGet = new HttpPost(BASE_URL_PUSHWOOSH + "checkMessage");
+            String jsonGet = ""//
+                    + "{" //
+                    + "  \"request\":{" //
+                    + "     \"application\":\"8FF60-0666B\"," //
+                    + "     \"hwid\":\"00-0C-29-E8-B1-8D\"" //
+                    + "  }" //
+                    + "}";
+            httpGet.setEntity(new StringEntity(jsonGet, ContentType.APPLICATION_JSON));
+            httpClient.execute(httpGet);
         }
-        HttpEntity entity = response.getEntity();
-        String contents = EntityUtils.toString(entity);
-        System.out.println(contents);
-
-        Thread.sleep(5000);
-
-        HttpPost httpGet = new HttpPost(BASE_URL_PUSHWOOSH + "checkMessage");
-        String jsonGet = ""//
-                + "{" //
-                + "  \"request\":{" //
-                + "     \"application\":\"8FF60-0666B\"," //
-                + "     \"hwid\":\"00-0C-29-E8-B1-8D\"" //
-                + "  }" //
-                + "}";
-        httpGet.setEntity(new StringEntity(jsonGet, ContentType.APPLICATION_JSON));
-        httpClient.execute(httpGet);
-
-        response.close();
     }
 
 }
