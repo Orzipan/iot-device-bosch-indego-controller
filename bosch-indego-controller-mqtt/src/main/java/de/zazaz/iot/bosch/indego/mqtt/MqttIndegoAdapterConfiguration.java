@@ -19,7 +19,7 @@ package de.zazaz.iot.bosch.indego.mqtt;
 /**
  * This contains the configuration to initialize the MQTT adapter.
  */
-public class MqttIndegoAdapterConfiguration implements Cloneable {
+public class MqttIndegoAdapterConfiguration {
 
     /** connection string for the MQTT broker (eg: "tcp://iot.eclipse.org:1883") */
     private String mqttBroker;
@@ -51,18 +51,23 @@ public class MqttIndegoAdapterConfiguration implements Cloneable {
     /** the polling interval (in ms) */
     private int pollingIntervalMs;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object clone ()
-    {
-        try {
-            return super.clone();
-        }
-        catch (CloneNotSupportedException ex) {
-            throw new RuntimeException(ex);
-        }
+    public MqttIndegoAdapterConfiguration() {
+        super();
+    }
+
+    public MqttIndegoAdapterConfiguration(MqttIndegoAdapterConfiguration source) {
+        super();
+
+        mqttBroker = source.mqttBroker;
+        mqttUsername = source.indegoUsername;
+        mqttPassword = source.indegoPassword;
+        mqttClientId = source.mqttClientId;
+        mqttTopicRoot = source.mqttTopicRoot;
+        mqttQos = source.mqttQos;
+        indegoBaseUrl = source.indegoBaseUrl;
+        indegoUsername = source.indegoUsername;
+        indegoPassword = source.indegoPassword;
+        pollingIntervalMs = source.pollingIntervalMs;
     }
 
     /**

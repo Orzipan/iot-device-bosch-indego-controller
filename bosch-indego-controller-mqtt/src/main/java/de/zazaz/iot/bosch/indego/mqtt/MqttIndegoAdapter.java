@@ -149,7 +149,7 @@ public class MqttIndegoAdapter {
     public MqttIndegoAdapter (MqttIndegoAdapterConfiguration configuration_)
     {
         // Get a clone, since we don't want to be manipulated during runtime
-        configuration = (MqttIndegoAdapterConfiguration) configuration_.clone();
+        configuration = new MqttIndegoAdapterConfiguration(configuration_);
     }
 
     /**
@@ -525,10 +525,9 @@ public class MqttIndegoAdapter {
      */
     private MqttClient connectMqtt (MqttIndegoCommandCallback callback)
     {
-        MqttClient result = null;
-        try {
-            LOG.info("Connecting to MQTT broker");
-            result = new MqttClient(configuration.getMqttBroker(), configuration.getMqttClientId(), new MemoryPersistence());
+        LOG.info("Connecting to MQTT broker");
+        
+        try (MqttClient result = new MqttClient(configuration.getMqttBroker(), configuration.getMqttClientId(), new MemoryPersistence())) {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setCleanSession(true);
             options.setUserName(configuration.getMqttUsername());
@@ -543,16 +542,9 @@ public class MqttIndegoAdapter {
         }
         catch (MqttException ex) {
             LOG.error("Connection to MQTT broker failed", ex);
-            try {
-                if ( result.isConnected() ) {
-                    result.disconnectForcibly();
-                }
-            }
-            catch (Exception ex2) {
-                // Ignored
-            }
-            return null;
         }
+        
+        return null;
     }
 
     /**
