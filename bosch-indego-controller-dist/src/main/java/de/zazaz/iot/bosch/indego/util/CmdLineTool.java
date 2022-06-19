@@ -43,6 +43,8 @@ import de.zazaz.iot.bosch.indego.IndegoException;
  */
 public class CmdLineTool {
 
+    private static final String DOWNLOAD_MAP = "download-map";
+
     public static void main (String[] args)
     {
         Options options = new Options();
@@ -93,7 +95,7 @@ public class CmdLineTool {
                 .build());
         options.addOption(Option //
                 .builder() //
-                .longOpt("download-map") //
+                .longOpt(DOWNLOAD_MAP) //
                 .desc("Download the current map") //
                 .build());
         options.addOption(Option //
@@ -128,7 +130,7 @@ public class CmdLineTool {
         String commandStr = cmds.getOptionValue('c');
         boolean doQueryState = cmds.hasOption('q');
         boolean doQueryCalendar = cmds.hasOption("query-calendar");
-        boolean doDownloadMap = cmds.hasOption("download-map");
+        boolean doDownloadMap = cmds.hasOption(DOWNLOAD_MAP);
 
         DeviceCommand command = null;
         if ( commandStr != null ) {
@@ -164,7 +166,7 @@ public class CmdLineTool {
             }
             if ( doDownloadMap ) {
             	System.out.println("Downloading map");
-            	String filename=cmds.getOptionValue("download-map", "map.svg");
+            	String filename=cmds.getOptionValue(DOWNLOAD_MAP, "map.svg");
             	controller.downloadMap(new File(filename));
             }
         }

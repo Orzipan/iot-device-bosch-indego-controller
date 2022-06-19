@@ -17,7 +17,6 @@
 package de.zazaz.iot.bosch.indego;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
@@ -41,6 +40,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * to control and query the device.
  */
 public class IndegoController {
+
+    private static final String THE_REQUEST_FAILED_WITH_ERROR = "The request failed with error: ";
+    private static final String ALMS = "alms/";
 
     /** the default url which provices the service for controlling the device */
     public static final String BASE_URL_DEFAULT = "https://api.indego.iot.bosch-si.com/api/v1/";
@@ -162,7 +164,7 @@ public class IndegoController {
                     && System.currentTimeMillis() - MIN_STATE_QUERY_INTERVAL_MS < lastStateQueryTs ) {
                 return deviceStateCache;
             }
-            DeviceStateInformation state = doGetRequest("alms/" + session.getAlmSn() + "/state",
+            DeviceStateInformation state = doGetRequest(ALMS + session.getAlmSn() + "/state",
                     DeviceStateInformation.class);
             deviceStateCache = state;
             lastStateQueryTs = System.currentTimeMillis();
@@ -173,7 +175,7 @@ public class IndegoController {
     public DeviceCalendar getCalendar () throws IndegoException
     {
         synchronized ( this ) {
-            DeviceCalendar calendar = doGetRequest("alms/" + session.getAlmSn() + "/calendar",
+            DeviceCalendar calendar = doGetRequest(ALMS + session.getAlmSn() + "/calendar",
                     DeviceCalendar.class);
             return calendar;
         }
@@ -191,7 +193,7 @@ public class IndegoController {
         lastStateQueryTs = 0;
         SetStateRequest request = new SetStateRequest();
         request.setState(command_.getActionCode());
-        doPutRequest("alms/" + session.getAlmSn() + "/state", request, null);
+        doPutRequest(ALMS + session.getAlmSn() + "/state", request, null);
     }
 
     /**
@@ -241,7 +243,7 @@ public class IndegoController {
                 throw new IndegoAuthenticationException("Was not able to authenticate");
             }
             if ( status != HttpStatus.SC_OK && status != HttpStatus.SC_CREATED ) {
-                throw new IndegoAuthenticationException("The request failed with error: "
+                throw new IndegoAuthenticationException(THE_REQUEST_FAILED_WITH_ERROR
                         + response.getStatusLine().toString());
             }
 
@@ -272,7 +274,7 @@ public class IndegoController {
             httpRequest.setHeader("x-im-context-id", session.getContextId());
             CloseableHttpResponse response = httpClient.execute(httpRequest);
             if ( response.getStatusLine().getStatusCode() != HttpStatus.SC_OK ) {
-                throw new IndegoAuthenticationException("The request failed with error: "
+                throw new IndegoAuthenticationException(THE_REQUEST_FAILED_WITH_ERROR
                         + response.getStatusLine().toString());
             }
             String responseContents = EntityUtils.toString(response.getEntity());
@@ -311,11 +313,11 @@ public class IndegoController {
             httpRequest.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             CloseableHttpResponse response = httpClient.execute(httpRequest);
             if ( response.getStatusLine().getStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR ) {
-                throw new IndegoInvalidCommandException("The request failed with error: "
+                throw new IndegoInvalidCommandException(THE_REQUEST_FAILED_WITH_ERROR
                         + response.getStatusLine().toString());
             }
             if ( response.getStatusLine().getStatusCode() != HttpStatus.SC_OK ) {
-                throw new IndegoAuthenticationException("The request failed with error: "
+                throw new IndegoAuthenticationException(THE_REQUEST_FAILED_WITH_ERROR
                         + response.getStatusLine().toString());
             }
             String responseContents = EntityUtils.toString(response.getEntity());
@@ -341,7 +343,7 @@ public class IndegoController {
     {
         synchronized (this)
         {
-            final LocationWeather weather = doGetRequest("alms/" + session.getAlmSn() + "/predictive/weather",
+            final LocationWeather weather = doGetRequest(ALMS + session.getAlmSn() + "/predictive/weather",
                     LocationWeather.class);
             System.out.println(weather);
             return weather;
@@ -353,7 +355,7 @@ public class IndegoController {
         synchronized (this)
         {
             final PredictiveAdjustment adjustment = doGetRequest(
-                    "alms/" + session.getAlmSn() + "/predictive/useradjustment", PredictiveAdjustment.class);
+                    ALMS + session.getAlmSn() + "/predictive/useradjustment", PredictiveAdjustment.class);
             return adjustment.getAdjustment();
         }
     }
@@ -364,7 +366,7 @@ public class IndegoController {
         {
             final PredictiveAdjustment adjustment = new PredictiveAdjustment();
             adjustment.setAdjustment(adjust);
-            doPutRequest("alms/" + session.getAlmSn() + "/predictive/useradjustment", adjustment, null);
+            doPutRequest(ALMS + session.getAlmSn() + "/predictive/useradjustment", adjustment, null);
         }
     }
 
@@ -372,7 +374,7 @@ public class IndegoController {
     {
         synchronized (this)
         {
-            final PredictiveStatus status = doGetRequest("alms/" + session.getAlmSn() + "/predictive",
+            final PredictiveStatus status = doGetRequest(ALMS + session.getAlmSn() + "/predictive",
                     PredictiveStatus.class);
             return status.isEnabled();
         }
@@ -384,7 +386,7 @@ public class IndegoController {
         {
             final PredictiveStatus status = new PredictiveStatus();
             status.setEnabled(enable);
-            doPutRequest("alms/" + session.getAlmSn() + "/predictive", status, null);
+            doPutRequest(ALMS + session.getAlmSn() + "/predictive", status, null);
         }
     }
 
@@ -393,26 +395,26 @@ public class IndegoController {
         synchronized (this)
         {
             final PredictiveCuttingTime nextCutting = doGetRequest(
-                    "alms/" + session.getAlmSn() + "/predictive/nextcutting", PredictiveCuttingTime.class);
+                    ALMS + session.getAlmSn() + "/predictive/nextcutting", PredictiveCuttingTime.class);
             return nextCutting.getNextCuttingAsDate();
         }
     }
 
     public DeviceCalendar getPredictiveExclusionTime() throws IndegoException
     {
-        final DeviceCalendar calendar = doGetRequest("alms/" + session.getAlmSn() + "/predictive/calendar",
+        final DeviceCalendar calendar = doGetRequest(ALMS + session.getAlmSn() + "/predictive/calendar",
                 DeviceCalendar.class);
         return calendar;
     }
 
     public void setPredictiveExclusionTime(final DeviceCalendar calendar) throws IndegoException
     {
-        doPutRequest("alms/" + session.getAlmSn() + "/predictive/calendar", calendar, null);
+        doPutRequest(ALMS + session.getAlmSn() + "/predictive/calendar", calendar, null);
     }
 
 	public void downloadMap(File file) {
 		try {
-			String svgFile=doGetRequest("alms/" + session.getAlmSn() + "/map", String.class);
+			String svgFile=doGetRequest(ALMS + session.getAlmSn() + "/map", String.class);
 			try(FileOutputStream fos=new FileOutputStream(file);){
 				fos.write(svgFile.getBytes());
 				System.out.println("Wrote SVG map file to:"+file.getAbsolutePath());

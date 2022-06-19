@@ -25,7 +25,10 @@ import java.util.Map;
  */
 public class DeviceStatus {
 
-	/** maps known status code to describing objects */
+    private static final String RETURNING_TO_DOCK = "Returning to dock";
+    private static final String DOCKED = "Docked";
+
+    /** maps known status code to describing objects */
     private static final Map<Integer, DeviceStatus> statusMap = Collections
             .synchronizedMap(new HashMap<Integer, DeviceStatus>());
 
@@ -48,12 +51,12 @@ public class DeviceStatus {
     {
         addStatus(0, "Reading status", DeviceCommand.RETURN);
         addStatus(257, "Charging", DeviceCommand.RETURN);
-        addStatus(258, "Docked", DeviceCommand.RETURN);
-        addStatus(259, "Docked - Software update", DeviceCommand.RETURN);
-        addStatus(260, "Docked", DeviceCommand.RETURN);
-        addStatus(261, "Docked", DeviceCommand.RETURN);
-        addStatus(262, "Docked - Loading map", DeviceCommand.MOW);
-        addStatus(263, "Docked - Saving map", DeviceCommand.RETURN);
+        addStatus(258, DOCKED, DeviceCommand.RETURN);
+        addStatus(259, DOCKED + " - Software update", DeviceCommand.RETURN);
+        addStatus(260, DOCKED, DeviceCommand.RETURN);
+        addStatus(261, DOCKED, DeviceCommand.RETURN);
+        addStatus(262, DOCKED + " - Loading map", DeviceCommand.MOW);
+        addStatus(263, DOCKED + " - Saving map", DeviceCommand.RETURN);
         addStatus(513, "Mowing", DeviceCommand.MOW);
         addStatus(514, "Relocalising", DeviceCommand.MOW);
         addStatus(515, "Loading map", DeviceCommand.MOW);
@@ -61,14 +64,14 @@ public class DeviceStatus {
         addStatus(517, "Paused", DeviceCommand.PAUSE);
         addStatus(518, "Border cut", DeviceCommand.MOW);
         addStatus(519, "Idle in lawn", DeviceCommand.MOW);
-        addStatus(769, "Returning to dock", DeviceCommand.RETURN);
-        addStatus(770, "Returning to dock", DeviceCommand.RETURN);
-        addStatus(771, "Returning to dock - Battery low", DeviceCommand.RETURN);
-        addStatus(772, "Returning to dock - Calendar timeslot ended", DeviceCommand.RETURN);
-        addStatus(773, "Returning to dock - Battery temp range", DeviceCommand.RETURN);
-        addStatus(774, "Returning to dock", DeviceCommand.RETURN);
-        addStatus(775, "Returning to dock - Lawn complete", DeviceCommand.RETURN);
-        addStatus(776, "Returning to dock - Relocalising", DeviceCommand.RETURN);
+        addStatus(769, RETURNING_TO_DOCK, DeviceCommand.RETURN);
+        addStatus(770, RETURNING_TO_DOCK, DeviceCommand.RETURN);
+        addStatus(771, RETURNING_TO_DOCK + " - Battery low", DeviceCommand.RETURN);
+        addStatus(772, RETURNING_TO_DOCK + " - Calendar timeslot ended", DeviceCommand.RETURN);
+        addStatus(773, RETURNING_TO_DOCK + " - Battery temp range", DeviceCommand.RETURN);
+        addStatus(774, RETURNING_TO_DOCK, DeviceCommand.RETURN);
+        addStatus(775, RETURNING_TO_DOCK + " - Lawn complete", DeviceCommand.RETURN);
+        addStatus(776, RETURNING_TO_DOCK + " - Relocalising", DeviceCommand.RETURN);
         addStatus(1025, "Diagnostic mode", null);
         addStatus(1026, "End of live", null);
         addStatus(1281, "Software update", null);
