@@ -69,12 +69,13 @@ public class DeviceStatus {
         addStatus(771, RETURNING_TO_DOCK + " - Battery low", DeviceCommand.RETURN);
         addStatus(772, RETURNING_TO_DOCK + " - Calendar timeslot ended", DeviceCommand.RETURN);
         addStatus(773, RETURNING_TO_DOCK + " - Battery temp range", DeviceCommand.RETURN);
-        addStatus(774, RETURNING_TO_DOCK, DeviceCommand.RETURN);
+        addStatus(774, RETURNING_TO_DOCK + " - Requested by user/app", DeviceCommand.RETURN);
         addStatus(775, RETURNING_TO_DOCK + " - Lawn complete", DeviceCommand.RETURN);
         addStatus(776, RETURNING_TO_DOCK + " - Relocalising", DeviceCommand.RETURN);
         addStatus(1025, "Diagnostic mode", null);
         addStatus(1026, "End of live", null);
         addStatus(1281, "Software update", null);
+        addStatus(1537, "Stuck on lawn, help needed", null);
     }
 
     /**
