@@ -85,7 +85,7 @@ public class IftttIndegoAdapter {
     public IftttIndegoAdapter (IftttIndegoAdapterConfiguration configuration_)
     {
         // Get a clone, since we don't want to be manipulated during runtime
-        configuration = (IftttIndegoAdapterConfiguration) configuration_.clone();
+        configuration = new IftttIndegoAdapterConfiguration(configuration_);
     }
 
     /**
@@ -433,7 +433,7 @@ public class IftttIndegoAdapter {
             private static final long serialVersionUID = 1L;
 
             @Override
-            protected void doGet (HttpServletRequest req_, HttpServletResponse resp_) throws ServletException, IOException
+            protected void doGet (HttpServletRequest req_, HttpServletResponse resp_)
             {
                 if ( req_.getPathInfo().startsWith(String.format("/%s/command/", configuration.getIftttReceiverSecret())) ) {
                     handleIftttCommand(req_, resp_);
@@ -441,10 +441,13 @@ public class IftttIndegoAdapter {
                     resp_.setStatus(HttpStatus.SC_OK);
                 }
                 else {
-                    super.doGet(req_, resp_);
+                    try {
+                        super.doGet(req_, resp_);
+                    } catch (ServletException | IOException e) {
+                        LOG.error("Error while handeling Get", e);
+                    }
                 }
             }
-
         };
 
         Server result = new Server(configuration.getIftttReceiverPort());

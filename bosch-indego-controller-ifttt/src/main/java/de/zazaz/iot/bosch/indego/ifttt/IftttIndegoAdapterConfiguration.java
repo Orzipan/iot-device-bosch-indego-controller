@@ -19,7 +19,7 @@ package de.zazaz.iot.bosch.indego.ifttt;
 /**
  * This contains the configuration to initialize the IFTTT adapter.
  */
-public class IftttIndegoAdapterConfiguration implements Cloneable {
+public class IftttIndegoAdapterConfiguration {
 
     /** The personal key of the maker channel to send events */
     private String iftttMakerKey;
@@ -60,18 +60,30 @@ public class IftttIndegoAdapterConfiguration implements Cloneable {
     /** the polling interval (in ms) */
     private int pollingIntervalMs;
 
+    public IftttIndegoAdapterConfiguration() {
+        super();
+    }
+
     /**
-     * {@inheritDoc}
+     * Copy constructor
+     * @param source
      */
-    @Override
-    public Object clone ()
-    {
-        try {
-            return super.clone();
-        }
-        catch (CloneNotSupportedException ex) {
-            throw new RuntimeException(ex);
-        }
+    public IftttIndegoAdapterConfiguration(IftttIndegoAdapterConfiguration source) {
+        super();
+
+        iftttMakerKey = source.iftttMakerKey;
+        iftttReceiverPort = source.iftttReceiverPort;
+        iftttReceiverSecret = source.iftttReceiverSecret;
+        iftttIgnoreServerCertificate = source.iftttIgnoreServerCertificate;
+        iftttOfflineEventName = source.iftttOnlineEventName;
+        iftttOnlineEventName = source.iftttOnlineEventName;
+        iftttStateChangeEventName = source.iftttStateChangeEventName;
+        iftttErrorEventName = source.iftttErrorEventName;
+        iftttErrorClearedEventName = source.iftttErrorClearedEventName;
+        indegoBaseUrl = source.indegoBaseUrl;
+        indegoUsername = source.indegoUsername;
+        indegoPassword = source.indegoPassword;
+        pollingIntervalMs = source.pollingIntervalMs;
     }
 
     /**
