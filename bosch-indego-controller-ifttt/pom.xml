@@ -9,7 +9,7 @@
 
 	<artifactId>bosch-indego-controller-ifttt</artifactId>
 	<packaging>jar</packaging>
-	
+
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>An API and adapters for the Bosch Indego Mower (IFTTT adapter).</description>
 	<url>https://github.com/zazaz-de/iot-device-bosch-indego-controller</url>
@@ -35,19 +35,13 @@
 			<groupId>de.zazaz.iot.bosch.indego</groupId>
 			<artifactId>bosch-indego-controller-lib</artifactId>
 		</dependency>
-	    <dependency>
+		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
 		</dependency>
-	    <dependency>
+		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-web-api</artifactId>
-			<version>8.0.1</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
